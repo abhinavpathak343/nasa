@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Climate Action Education</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #4ade80, #3b82f6);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #333;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #15803d;
+            background-image: url('https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1740&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 60px 40px;
+            margin-bottom: 0;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+            z-index: 0;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(21, 128, 61, 0.7);
+            border-radius: 20px 20px 0 0;
+        }
+
+        header h1,
+        header p {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 3em;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            background-color: transparent;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+            font-weight: 600;
+            color: #555;
+            border-radius: 20px;
+        }
+
+        .tab:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .tab.active {
+            background-color: #15803d;
+            color: white;
+        }
+
+        .content {
+            background-color: transparent;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: none;
+            animation: fadeIn 1s ease-out;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .quiz-option {
+            background-color: #f0f0f0;
+            border: none;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .quiz-option:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .quiz-option.correct {
+            background-color: #4ade80;
+            color: white;
+        }
+
+        .quiz-option.incorrect {
+            background-color: #f87171;
+            color: white;
+        }
+
+        .memory-game {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            /* 4 columns */
+            gap: 10px;
+            /* Space between cards */
+            max-width: 600px;
+            /* Maximum width for the game */
+            margin: 20px;
+        }
+
+        .memory-card {
+            width: 100%;
+            /* Full width of the grid cell */
+            aspect-ratio: 1 / 1;
+            /* Maintain square shape */
+            perspective: 1000px;
+            /* 3D effect */
+            cursor: pointer;
+        }
+
+        .memory-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .memory-card.flipped .memory-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .memory-card-front,
+        .memory-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            border-radius: 5px;
+        }
+
+        .memory-card-front {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .memory-card-back {
+            background-color: #f1f1f1;
+            color: #333;
+            transform: rotateY(180deg);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .memory-game {
+                grid-template-columns: repeat(3, 1fr);
+                /* 3 columns for smaller screens */
+            }
+        }
+
+        @media (max-width: 400px) {
+            .memory-game {
+                grid-template-columns: repeat(2, 1fr);
+                /* 2 columns for very small screens */
+            }
+        }
+
+        .sorting-game {
+            text-align: center;
+        }
+
+        .sorting-item {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding: 20px;
+            background-color: #f0f0f0;
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .sorting-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .sorting-button {
+            padding: 15px 25px;
+            font-size: 1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .sorting-button[data-category="recycle"] {
+            background-color: #3b82f6;
+            color: white;
+        }
+
+        .sorting-button[data-category="compost"] {
+            background-color: #4ade80;
+            color: white;
+        }
+
+        .sorting-button[data-category="trash"] {
+            background-color: #f87171;
+            color: white;
+        }
+
+        .sorting-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .learn-content {
+            position: relative;
+        }
+
+        .learn-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .learn-navigation button {
+            background-color: #4ade80;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .learn-navigation button:hover {
+            background-color: #15803d;
+        }
+
+        .chatbot-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #15803d;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-button:hover {
+            background-color: #166534;
+            transform: translateY(-3px);
+        }
+
+        .chatbot-container {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            width: 350px;
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            display: none;
+        }
+
+        .chatbot-messages {
+            height: 350px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #edeef7;
+            border-radius: 10px;
+        }
+
+        .chatbot-input {
+            display: flex;
+        }
+
+        .chatbot-input input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+            font-size: 1em;
+        }
+
+        .chatbot-input button {
+            padding: 12px 20px;
+            background-color: #15803d;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .suggested-questions {
+            margin-top: 15px;
+        }
+
+        .suggested-questions button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 8px 12px;
+            margin-bottom: 8px;
+            background-color: #f0f0f0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .suggested-questions button:hover {
+            background-color: #e0e0e0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .floating-bubble {
+            position: fixed;
+            border-radius: 50%;
+            opacity: 0.5;
+            pointer-events: none;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            25% {
+                transform: translate(50px, 50px);
+            }
+
+            50% {
+                transform: translate(100px, -50px);
+            }
+
+            75% {
+                transform: translate(-50px, 50px);
+            }
+        }
+
+        /* Add smooth scrolling to the page */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Add these styles to your existing CSS */
+        .footprint-calculator {
+            background-color: #f0f8ff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .calculator-intro {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .calculate-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .calculate-button:hover {
+            background-color: #2ecc71;
+        }
+
+        .result-container {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e8f6f3;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-container h3 {
+            color: #16a085;
+            margin-bottom: 10px;
+        }
+
+        .result-container p {
+            margin-bottom: 10px;
+        }
+
+        .result-container ul {
+            padding-left: 20px;
+        }
+
+        .result-container li {
+            margin-bottom: 5px;
+        }
+
+        /* Add Font Awesome for icons */
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css');
+
+        .header-buttons {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .header-button {
+            background-color: transparent;
+            border: 2px solid #ffffff;
+            color: #ffffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .header-button:hover {
+            background-color: #ffffff;
+            color: #15803d;
+        }
+
+        .login-signup-form {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
+        }
+
+        .login-signup-form h2 {
+            margin-bottom: 20px;
+            color: #15803d;
+        }
+
+        .login-signup-form input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .login-signup-form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #15803d;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .login-signup-form button:hover {
+            background-color: #166534;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>Climate Action Education</h1>
+            <p>Learn about climate change and take action for a sustainable future through interactive games and
+                quizzes.</p>
+           <div class="header-buttons">
+               <button class="header-button" onclick="window.location.href='loginpage.html'">Login</button>
+               <button class="header-button" onclick="window.location.href='loginpage.html'">Sign Up</button>
+           </div>
+
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" data-tab="learn">Learn</button>
+            <button class="tab" data-tab="quiz">Climate Quiz</button>
+            <button class="tab" data-tab="memory">Memory Game</button>
+            <button class="tab" data-tab="sorting">Waste Sorting</button>
+            <button class="tab" data-tab="trivia">Climate Trivia</button>
+            <button class="tab" data-tab="footprint">Carbon Footprint</button>
+        </div>
+
+        <div class="content">
+            <div id="learn" class="tab-content">
+                <div class="learn-content">
+                    <h2>Understanding Climate Change</h2>
+                    <p>Climate change refers to long-term shifts in global weather patterns and average temperatures.
+                        It's primarily caused by human activities that release greenhouse gases into the atmosphere,
+                        such as burning fossil fuels and deforestation.</p>
+                </div>
+                <div class="learn-navigation">
+                    <button id="prev-slide">Previous</button>
+                    <button id="next-slide">Next</button>
+                </div>
+            </div>
+
+            <div id="quiz" class="tab-content hidden">
+                <h2>Climate Action Quiz</h2>
+                <div id="quiz-question"></div>
+                <div class="quiz-options"></div>
+                <div id="quiz-feedback" class="hidden"></div>
+                <button id="next-question" class="hidden sorting-button" style="margin-top: 20px;">Next
+                    Question</button>
+            </div>
+
+            <div id="memory" class="tab-content hidden">
+                <h2>Climate Change Memory Game</h2>
+                <div class="game-status" id="gameStatus">Pairs Matched: 0 / 4</div>
+                <div class="memory-game" id="memoryGame">
+                    <!-- Cards will be dynamically added here -->
+                </div>
+                <button class="restart-button" onclick="restartGame()">Restart Game</button>
+            </div>
+
+            <div id="sorting" class="tab-content hidden">
+                <h2>Waste Sorting Challenge</h2>
+                <p>Learn how to properly sort waste to reduce your environmental impact. Categorize items into recycle,
+                    compost, or trash.</p>
+                <div class="sorting-game">
+                    <div class="sorting-item"></div>
+                    <div class="sorting-buttons">
+                        <button class="sorting-button" data-category="recycle">Recycle</button>
+                        <button class="sorting-button" data-category="compost">Compost</button>
+                        <button class="sorting-button" data-category="trash">Trash</button>
+                    </div>
+                    <div id="sorting-score"></div>
+                </div>
+            </div>
+
+            <div id="trivia" class="tab-content hidden">
+                <h2>Climate Action Trivia</h2>
+                <p>Test your knowledge with these quick climate change trivia questions!</p>
+                <div id="trivia-question"></div>
+                <div id="trivia-options"></div>
+                <button id="next-trivia" class="sorting-button hidden">Next Question</button>
+                <div id="trivia-score"></div>
+            </div>
+
+            <div id="footprint" class="tab-content hidden">
+                <h2>Carbon Footprint Calculator</h2>
+                <p class="calculator-intro">Estimate your annual carbon footprint based on your lifestyle choices. Fill
+                    in the fields below and click 'Calculate' to see your impact.</p>
+                <div class="footprint-calculator">
+                    <div class="input-group">
+                        <label for="miles-driven">
+                            <i class="fas fa-car"></i> Miles driven per year:
+                        </label>
+                        <input type="number" id="miles-driven" min="0" placeholder="e.g., 10000">
+                    </div>
+                    <div class="input-group">
+                        <label for="flights-taken">
+                            <i class="fas fa-plane"></i> Flights taken per year:
+                        </label>
+                        <input type="number" id="flights-taken" min="0" placeholder="e.g., 2">
+                    </div>
+                    <div class="input-group">
+                        <label for="electricity-bill">
+                            <i class="fas fa-bolt"></i> Monthly electricity bill ($):
+                        </label>
+                        <input type="number" id="electricity-bill" min="0" placeholder="e.g., 100">
+                    </div>
+                    <div class="input-group">
+                        <label for="recycle-habit">
+                            <i class="fas fa-recycle"></i> Do you recycle regularly?
+                        </label>
+                        <select id="recycle-habit">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <button onclick="calculateFootprint()" class="calculate-button">Calculate Footprint</button>
+                </div>
+                <div id="footprint-result" class="result-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <button class="chatbot-button" onclick="toggleChatbot()">Chat with AI</button>
+
+    <div class="chatbot-container">
+        <div class="chatbot-messages"></div>
+        <div class="chatbot-input">
+            <input type="text" id="chatbot-input" placeholder="Ask about climate change...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+        <div class="suggested-questions">
+            <button onclick="askSuggestedQuestion('What are the main causes of climate change?')">What are the main
+                causes of climate change?</button>
+            <button onclick="askSuggestedQuestion('How can individuals reduce their carbon footprint?')">How can
+                individuals reduce their carbon footprint?</button>
+            <button
+                onclick="askSuggestedQuestion('What are the potential impacts of climate change on biodiversity?')">What
+                are the potential impacts of climate change on biodiversity?</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        function switchTab(tabId) {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            tabContents.forEach(content => content.classList.add('hidden'));
+
+            document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+            document.getElementById(tabId).classList.remove('hidden');
+
+            // Reset or initialize games as needed
+            if (tabId === 'quiz') {
+                resetQuiz();
+            } else if (tabId === 'memory') {
+                restartGame();
+            } else if (tabId === 'sorting') {
+                resetSortingGame();
+            } else if (tabId === 'trivia') {
+                resetTrivia();
+            } else if (tabId === 'footprint') {
+                document.getElementById('footprint-result').innerHTML = '';
+            }
+        }
+
+        // Add event listeners to tabs
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                switchTab(tabId);
+            });
+        });
+
+        // Initial load
+        switchTab('learn');
+
+        // Learn module
+        const learnContent = [{
+                title: "Understanding Climate Change",
+                content: "Climate change refers to long-term shifts in global weather patterns and average temperatures. It's primarily caused by human activities that release greenhouse gases into the atmosphere, such as burning fossil fuels and deforestation."
+            },
+            {
+                title: "Key Facts",
+                content: "<ul><li>The Earth's average temperature has increased by about 1°C since pre-industrial times.</li><li>Sea levels are rising due to melting ice caps and thermal expansion of the oceans.</li><li>Extreme weather events are becoming more frequent and intense.</li><li>Many plant and animal species are at risk of extinction due to changing habitats.</li></ul>"
+            },
+            {
+                title: "What Can We Do?",
+                content: "<ul><li>Reduce energy consumption and switch to renewable energy sources.</li><li>Use sustainable transportation options like walking, cycling, or public transit.</li><li>Reduce, reuse, and recycle to minimize waste.</li><li>Support policies and leaders committed to climate action.</li><li>Educate others about climate change and its impacts.</li></ul>"
+            }
+        ];
+
+        let currentSlide = 0;
+
+        function updateLearnContent() {
+            const learnContentElement = document.querySelector('.learn-content');
+            learnContentElement.innerHTML = `
+                <h2>${learnContent[currentSlide].title}</h2>
+                <div>${learnContent[currentSlide].content}</div>
+            `;
+        }
+
+        document.getElementById('prev-slide').addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + learnContent.length) % learnContent.length;
+            updateLearnContent();
+        });
+
+        document.getElementById('next-slide').addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % learnContent.length;
+            updateLearnContent();
+        });
+
+        updateLearnContent();
+
+        // Quiz
+        const questions = [{
+                text: "What is the main cause of human-induced climate change?",
+                options: ["Deforestation", "Greenhouse gas emissions", "Overpopulation", "Solar radiation"],
+                correctAnswer: 1
+            },
+            {
+                text: "Which of these is NOT a greenhouse gas?",
+                options: ["Carbon dioxide", "Methane", "Nitrogen", "Water vapor"],
+                correctAnswer: 2
+            },
+            {
+                text: "What is the Paris Agreement primarily focused on?",
+                options: ["Ocean conservation", "Biodiversity protection", "Climate change mitigation",
+                    "Waste management"
+                ],
+                correctAnswer: 2
+            },
+            {
+                text: "Which sector contributes the most to global greenhouse gas emissions?",
+                options: ["Transportation", "Agriculture", "Energy production", "Manufacturing"],
+                correctAnswer: 2
+            },
+            {
+                text: "What is a potential consequence of climate change?",
+                options: ["Increased biodiversity", "Lower sea levels", "More extreme weather events",
+                    "Cooler global temperatures"
+                ],
+                correctAnswer: 2
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            const question = questions[currentQuestion];
+            document.getElementById('quiz-question').textContent = question.text;
+            const optionsContainer = document.querySelector('.quiz-options');
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('quiz-option');
+                button.addEventListener('click', () => selectAnswer(index));
+                optionsContainer.appendChild(button);
+            });
+            document.getElementById('quiz-feedback').classList.add('hidden');
+            document.getElementById('next-question').classList.add('hidden');
+        }
+
+        function selectAnswer(index) {
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.quiz-option');
+            options.forEach(option => option.disabled = true);
+            if (index === question.correctAnswer) {
+                options[index].classList.add('correct');
+                score++;
+            } else {
+                options[index].classList.add('incorrect');
+                options[question.correctAnswer].classList.add('correct');
+            }
+            document.getElementById('quiz-feedback').textContent = question.explanation;
+            document.getElementById('quiz-feedback').classList.remove('hidden');
+            document.getElementById('next-question').classList.remove('hidden');
+        }
+
+        document.getElementById('next-question').addEventListener('click', () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showQuizResults();
+            }
+        });
+
+        function showQuizResults() {
+            const quizContent = document.getElementById('quiz');
+            quizContent.innerHTML = `
+                <h2>Quiz Completed!</h2>
+                <p>Your score: ${score} out of ${questions.length}</p>
+                <p>${score === questions.length ? "Perfect score! You're a climate action expert!" :
+                    score >= questions.length / 2 ? "Great job! You know a lot about climate change." :
+                    "Keep learning about climate change. Every bit of knowledge helps!"}</p>
+                <button onclick="resetQuiz()" class="sorting-button">Take Quiz Again</button>
+            `;
+        }
+
+        function resetQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        loadQuestion();
+
+        // Memory Game
+        const gameItems = [{
+                id: 'A',
+                content: '🌱'
+            },
+            {
+                id: 'B',
+                content: '🌍'
+            },
+            {
+                id: 'C',
+                content: '♻️'
+            },
+            {
+                id: 'D',
+                content: '💨'
+            }
+        ];
+
+        let flippedCards = [];
+        let matchedPairs = 0;
+
+        function createCard(item) {
+            return `
+                <div class="memory-card" onclick="flipCard(this)" data-id="${item.id}">
+                    <div class="memory-card-inner">
+                        <div class="memory-card-front">?</div>
+                        <div class="memory-card-back">${item.content}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initializeGame() {
+            const gameBoard = document.getElementById('memoryGame');
+            const shuffledItems = shuffleArray([...gameItems, ...gameItems]);
+            gameBoard.innerHTML = shuffledItems.map(createCard).join('');
+            updateGameStatus();
+        }
+
+        function flipCard(card) {
+            if (flippedCards.length < 2 && !card.classList.contains('flipped')) {
+                card.classList.add('flipped');
+                flippedCards.push(card);
+
+                if (flippedCards.length === 2) {
+                    setTimeout(checkForMatch, 1000);
+                }
+            }
+        }
+
+        function checkForMatch() {
+            const [card1, card2] = flippedCards;
+            const id1 = card1.getAttribute('data-id');
+            const id2 = card2.getAttribute('data-id');
+
+            if (id1 === id2) {
+                card1.style.visibility = 'hidden';
+                card2.style.visibility = 'hidden';
+                matchedPairs++;
+                updateGameStatus();
+                if (matchedPairs === gameItems.length) {
+                    setTimeout(() => alert('Congratulations! You won the game!'), 500);
+                }
+            } else {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+            }
+
+            flippedCards = [];
+        }
+
+        function updateGameStatus() {
+            document.getElementById('gameStatus').textContent = `Pairs Matched: ${matchedPairs} / ${gameItems.length}`;
+        }
+
+        function restartGame() {
+            matchedPairs = 0;
+            flippedCards = [];
+            initializeGame();
+        }
+
+        // Initialize the game when the page loads
+        window.onload = initializeGame;
+
+        // Sorting Game
+        const wasteItems = [{
+                name: 'Plastic Bottle',
+                category: 'recycle'
+            },
+            {
+                name: 'Banana Peel',
+                category: 'compost'
+            },
+            {
+                name: 'Newspaper',
+                category: 'recycle'
+            },
+            {
+                name: 'Styrofoam Cup',
+                category: 'trash'
+            },
+            {
+                name: 'Apple Core',
+                category: 'compost'
+            }
+        ];
+
+        let currentSortingItem = 0;
+        let sortingScore = 0;
+
+        function loadSortingItem() {
+            if (currentSortingItem < wasteItems.length) {
+                const itemElement = document.querySelector('.sorting-item');
+                itemElement.textContent = wasteItems[currentSortingItem].name;
+                document.getElementById('sorting-score').textContent = `Score: ${sortingScore}/${wasteItems.length}`;
+            } else {
+                showSortingResults();
+            }
+        }
+
+        function handleSorting(category) {
+            if (category === wasteItems[currentSortingItem].category) {
+                sortingScore++;
+            }
+            currentSortingItem++;
+            loadSortingItem();
+        }
+
+        document.querySelectorAll('.sorting-button').forEach(button => {
+            button.addEventListener('click', () => handleSorting(button.getAttribute('data-category')));
+        });
+
+        function showSortingResults() {
+            const sortingGame = document.querySelector('.sorting-game');
+            sortingGame.innerHTML = `
+                <h2>Game Over!</h2>
+                <p>Your final score: ${sortingScore}/${wasteItems.length}</p>
+                <button onclick="resetSortingGame()" class="sorting-button">Play Again</button>
+            `;
+        }
+
+        function resetSortingGame() {
+            currentSortingItem = 0;
+            sortingScore = 0;
+            loadSortingItem();
+        }
+
+        loadSortingItem();
+
+        // Chatbot
+        // Toggle chatbot visibility
+        function toggleChatbot() {
+            const chatbotContainer = document.querySelector('.chatbot-container');
+            chatbotContainer.style.display = chatbotContainer.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Send message and get AI response
+        function sendMessage() {
+            const input = document.getElementById('chatbot-input');
+            const message = input.value.trim();
+            if (message) {
+                // Display user message
+                addMessageToChatbot('user', message);
+
+                // Make API call to your AI backend
+                axios.post('https://ai.potential.com/chatbot/', {
+                        system: 'You are a helpful assistant that answers user questions concisely.',
+                        message: message, // The user's question
+                        AI: 'Ameen' // Assuming the AI name is 'Ameen'
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        // Extract AI response (assuming it's a simple string)
+                        const aiResponse = response.data.response || "Sorry, I couldn't find an answer to that.";
+
+                        // Display AI response in chatbot
+                        addMessageToChatbot('ai', aiResponse);
+                    })
+                    .catch(error => {
+                        // Handle error, show fallback message
+                        addMessageToChatbot('ai', "Sorry, I couldn't get a response from the AI.");
+                        console.error('Error fetching AI response:', error);
+                    });
+
+                // Clear input after sending
+                input.value = '';
+            }
+        }
+
+        // Add message to chatbot
+        function addMessageToChatbot(sender, message) {
+            const chatbotMessages = document.querySelector('.chatbot-messages');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add(sender);
+            messageElement.textContent = message;
+            chatbotMessages.appendChild(messageElement);
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight; // Auto-scroll to bottom
+        }
+
+        // Suggested questions feature
+        function askSuggestedQuestion(question) {
+            document.getElementById('chatbot-input').value = question;
+            sendMessage();
+        }
+
+
+        // Background animation
+        function createFloatingBubble() {
+            const bubble = document.createElement('div');
+            bubble.classList.add('floating-bubble');
+            bubble.style.width = `${Math.random() * 80 + 20}px`;
+            bubble.style.height = bubble.style.width;
+            bubble.style.left = `${Math.random() * 100}vw`;
+            bubble.style.top = `${Math.random() * 100}vh`;
+            bubble.style.backgroundColor = `rgba(255, 255, 255, ${Math.random() * 0.3 + 0.1})`;
+            document.body.appendChild(bubble);
+
+            setTimeout(() => {
+                bubble.remove();
+            }, 20000);
+        }
+
+        setInterval(createFloatingBubble, 1500);
+
+        // Add smooth scrolling to navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Climate Action Trivia
+        const triviaQuestions = [{
+                question: "Which of these is a renewable energy source?",
+                options: ["Coal", "Natural gas", "Solar power", "Oil"],
+                correctAnswer: 2
+            },
+            {
+                question: "What percentage of the Earth's surface is covered by oceans?",
+                options: ["50%", "60%", "70%", "80%"],
+                correctAnswer: 2
+            },
+            {
+                question: "Which of these is NOT a greenhouse gas?",
+                options: ["Carbon dioxide", "Methane", "Nitrogen", "Water vapor"],
+                correctAnswer: 2
+            },
+            {
+                question: "What is the Kyoto Protocol?",
+                options: ["A climate change treaty", "A biodiversity agreement", "An ocean protection plan",
+                    "An air quality standard"
+                ],
+                correctAnswer: 0
+            },
+            {
+                question: "Which country emits the most carbon dioxide?",
+                options: ["United States", "China", "India", "Russia"],
+                correctAnswer: 1
+            }
+        ];
+
+        let currentTriviaQuestion = 0;
+        let triviaScore = 0;
+
+        function loadTriviaQuestion() {
+            if (currentTriviaQuestion < triviaQuestions.length) {
+                const question = triviaQuestions[currentTriviaQuestion];
+                document.getElementById('trivia-question').textContent = question.question;
+                const optionsContainer = document.getElementById('trivia-options');
+                optionsContainer.innerHTML = '';
+                question.options.forEach((option, index) => {
+                    const button = document.createElement('button');
+                    button.textContent = option;
+                    button.classList.add('quiz-option');
+                    button.addEventListener('click', () => selectTriviaAnswer(index));
+                    optionsContainer.appendChild(button);
+                });
+                document.getElementById('next-trivia').classList.add('hidden');
+            } else {
+                showTriviaResults();
+            }
+        }
+
+        function selectTriviaAnswer(index) {
+            const question = triviaQuestions[currentTriviaQuestion];
+            const options = document.querySelectorAll('#trivia-options .quiz-option');
+            options.forEach(option => option.disabled = true);
+            if (index === question.correctAnswer) {
+                options[index].classList.add('correct');
+                triviaScore++;
+            } else {
+                options[index].classList.add('incorrect');
+                options[question.correctAnswer].classList.add('correct');
+            }
+            document.getElementById('next-trivia').classList.remove('hidden');
+        }
+
+        document.getElementById('next-trivia').addEventListener('click', () => {
+            currentTriviaQuestion++;
+            loadTriviaQuestion();
+        });
+
+        function showTriviaResults() {
+            const triviaContent = document.getElementById('trivia');
+            triviaContent.innerHTML = `
+                <h2>Trivia Completed!</h2>
+                <p>Your score: ${triviaScore} out of ${triviaQuestions.length}</p>
+                <button onclick="resetTrivia()" class="sorting-button">Play Again</button>
+            `;
+        }
+
+        function resetTrivia() {
+            currentTriviaQuestion = 0;
+            triviaScore = 0;
+            loadTriviaQuestion();
+        }
+
+        // Carbon Footprint Calculator
+        function calculateFootprint() {
+            const milesDriven = parseFloat(document.getElementById('miles-driven').value) || 0;
+            const flightsTaken = parseFloat(document.getElementById('flights-taken').value) || 0;
+            const electricityBill = parseFloat(document.getElementById('electricity-bill').value) || 0;
+            const recycleHabit = document.getElementById('recycle-habit').value;
+
+            let footprint = 0;
+            footprint += milesDriven * 0.404; // kg CO2 per mile
+            footprint += flightsTaken * 1100; // kg CO2 per flight (rough estimate)
+            footprint += electricityBill * 105; // kg CO2 per $ of electricity
+            if (recycleHabit === 'no') {
+                footprint += 200; // Additional kg CO2 for not recycling
+            }
+
+            const resultElement = document.getElementById('footprint-result');
+            resultElement.innerHTML = `
+                <h3>Your Estimated Annual Carbon Footprint</h3>
+                <p><strong>${footprint.toFixed(2)} kg CO2</strong></p>
+                <p>Here are some tips to reduce your carbon footprint:</p>
+                <ul>
+                    <li>Use public transportation or carpool when possible</li>
+                    <li>Reduce air travel or choose direct flights</li>
+                    <li>Use energy-efficient appliances and turn off lights when not in use</li>
+                    <li>Recycle and compost regularly</li>
+                    <li>Eat more plant-based meals and reduce meat consumption</li>
+                </ul>
+            `;
+        }
+
+        // Initialize new games
+        loadTriviaQuestion();
+
+        function showLoginForm() {
+            document.getElementById('loginForm').style.display = 'block';
+        }
+
+        function showSignupForm() {
+            document.getElementById('signupForm').style.display = 'block';
+        }
+
+        function login() {
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Make API call to your backend for login
+            axios.post('/users/login', {}, {
+                headers: {
+                    username: username,
+                    password: password
+                }
+            })
+            .then(response => {
+                alert('Logged in successfully');
+                localStorage.setItem('token', response.data.token);
+                document.getElementById('loginForm').style.display = 'none';
+            })
+            .catch(error => {
+                alert('Login failed: ' + error.response.data.message);
+            });
+        }
+
+        function signup() {
+            const username = document.getElementById('signupUsername').value;
+            const password = document.getElementById('signupPassword').value;
+            
+            // Make API call to your backend for signup
+            axios.post('/users/signup', {
+                username: username,
+                password: password
+            })
+            .then(response => {
+                alert('Signed up successfully');
+                localStorage.setItem('token', response.data.token);
+                document.getElementById('signupForm').style.display = 'none';
+            })
+            .catch(error => {
+                alert('Signup failed: ' + error.response.data.message);
+            });
+        }
+    </script>
+</body>
+
+</html>
